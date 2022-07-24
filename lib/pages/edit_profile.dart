@@ -5,11 +5,16 @@ import 'package:intl/intl.dart';
 import 'package:nutech/pages/personal_information.dart';
 import 'package:nutech/pages/qualification.dart';
 import 'package:badges/badges.dart';
+import 'package:nutech/utils/constants.dart';
+import 'package:provider/provider.dart';
 
 import '../components/c_dropdown_b.dart';
 import '../components/c_edit_profile_field.dart';
 import '../components/profile_dropdown.dart';
-import '../widgets/country.dart';
+import '../providers/country_provider.dart';
+import '../providers/disability_provider.dart';
+import '../providers/minority_provider.dart';
+import '../utils/country.dart';
 
 class EditProfile extends StatefulWidget {
   EditProfile({Key? key}) : super(key: key);
@@ -109,6 +114,7 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   Widget build(BuildContext context) {
+    Provider.of<CountryProvider>(context, listen: false).getCountriesFromAPI();
     return Scaffold(
       body: Stack(
         children: [
@@ -150,7 +156,8 @@ class _EditProfileState extends State<EditProfile> {
           SafeArea(
             child: SingleChildScrollView(
               child: RPadding(
-                padding: REdgeInsets.fromLTRB(22, 0, 26, 10),
+                padding:
+                    REdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -250,166 +257,195 @@ class _EditProfileState extends State<EditProfile> {
                       ),
                     ),
 
-                    RPadding(
-                      padding: REdgeInsets.only(left: 24),
-                      child: Column(
-                        children: [
-                          CEditProfileFormField(
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.number,
-                            hintText: '13302-1728416212-1',
-                            prefixIcon: Image.asset(
-                                'assets/images/signup_finger_icon.png'),
-                          ),
-                          CEditProfileFormField(
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.name,
-                            hintText: 'Father Name',
-                            prefixIcon:
-                                Image.asset('assets/images/full_name.png'),
-                          ),
-                          CProfileDropdownButtonFormField(
-                              // value: _currentOccupationSelectedValue,
-                              isExpanded: true,
-                              onChanged: (value) {
-                                print(value);
-                              },
-                              hintText: ' Female',
-                              prefixIcon:
-                                  Image.asset('assets/images/gender_icon.png'),
-                              items: genderDropdownItems),
-                          CProfileDropdownButtonFormField(
-                              // value: _currentOccupationSelectedValue,
-                              isExpanded: true,
-                              onChanged: (value) {
-                                print(value);
-                              },
-                              hintText: 'Married',
-                              prefixIcon:
-                                  Image.asset('assets/images/status_icon.png'),
-                              items: statusDropdownItems),
-                          CEditProfileFormField(
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.number,
-                            hintText: 'English,Urdu,Punjabi',
-                            prefixIcon:
-                                Image.asset('assets/images/language_icon.png'),
-                          ),
-                          CEditProfileFormField(
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.number,
-                            hintText: '+9236-2689323',
-                            prefixIcon:
-                                Image.asset('assets/images/call_icon.png'),
-                          ),
-                          CEditProfileFormField(
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.number,
-                            hintText: 'Somewhere,Punjab,Pakistan',
-                            prefixIcon:
-                                Image.asset('assets/images/location_icon.png'),
-                          ),
-                          CEditProfileFormField(
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.number,
-                            hintText: '5-Nov-1978',
-                            testControllor: dateinput,
-                            prefixIcon:
-                                Image.asset('assets/images/date_icon.png'),
-                            suffixIcon: Image.asset(
-                                'assets/images/suffix_birth_icon.png'),
-
-                            // enabled: false,
-                            onTap: () async {
-                              DateTime? pickedDate = await showDatePicker(
-                                  context: context,
-                                  initialDate: DateTime.now(),
-                                  firstDate: DateTime(
-                                      2000), //DateTime.now() - not to allow to choose before today.
-                                  lastDate: DateTime(2101));
-
-                              //lastDate: DateTime.now()- DateTime(2101));
-
-                              if (pickedDate != null) {
-                                print(
-                                    pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
-                                String formattedDate =
-                                    DateFormat('yyyy-MM-dd').format(pickedDate);
-                                print(
-                                    formattedDate); //formatted date output using intl package =>  2021-03-16
-                                //you can implement different kind of Date Format here according to your requirement
-
-                                setState(() {
-                                  dateinput.text =
-                                      formattedDate; //set output date to TextField value.
-                                });
-                              } else {
-                                print("Date is not selected");
-                              }
-                            },
-                          ),
-                          CEditProfileFormField(
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.number,
-                            hintText: 'abbasOfficial@gmail.com',
-                            prefixIcon:
-                                Image.asset('assets/images/email_icon.png'),
-                          ),
-                          CEditProfileFormField(
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.number,
-                            hintText: 'Punjab',
-                            prefixIcon:
-                                Image.asset('assets/images/province_icon.png'),
-                          ),
-                          CEditProfileFormField(
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.number,
-                            hintText: 'Programmer',
-                            prefixIcon: Image.asset(
-                                'assets/images/programmer_icon.png'),
-                          ),
-                          CProfileDropdownButtonFormField(
-                              // value: _currentOccupationSelectedValue,
-                              isExpanded: true,
-                              onChanged: (value) {
-                                print(value);
-                              },
-                              hintText: 'Minority',
-                              prefixIcon: Image.asset(
-                                  'assets/images/minority_icon.png'),
-                              icon: Image.asset(
-                                  'assets/images/dropdown_icon.png'),
-                              items: minorityDropdownItems),
-                          CProfileDropdownButtonFormField(
-                              // value: _currentOccupationSelectedValue,
-                              isExpanded: true,
-                              onChanged: (value) {
-                                print(value);
-                              },
-                              hintText: 'Disability',
-                              prefixIcon: Image.asset(
-                                  'assets/images/disability_icon.png'),
-                              icon: Image.asset(
-                                  'assets/images/dropdown_icon.png'),
-                              items: disabilityDropdownItems),
-                          CProfileDropdownButtonFormField(
+                    Column(
+                      children: [
+                        CEditProfileFormField(
+                          textInputAction: TextInputAction.next,
+                          keyboardType: TextInputType.number,
+                          hintText: '13302-1728416212-1',
+                          prefixIcon: Image.asset(
+                              'assets/images/signup_finger_icon.png'),
+                        ),
+                        CEditProfileFormField(
+                          textInputAction: TextInputAction.next,
+                          keyboardType: TextInputType.name,
+                          hintText: 'Father Name',
+                          prefixIcon:
+                              Image.asset('assets/images/full_name.png'),
+                        ),
+                        CProfileDropdownButtonFormField(
                             // value: _currentOccupationSelectedValue,
                             isExpanded: true,
                             onChanged: (value) {
                               print(value);
                             },
+                            hintText: ' Female',
+                            prefixIcon:
+                                Image.asset('assets/images/gender_icon.png'),
+                            items: genderDropdownItems),
+                        CProfileDropdownButtonFormField(
+                            // value: _currentOccupationSelectedValue,
+                            isExpanded: true,
+                            onChanged: (value) {
+                              print(value);
+                            },
+                            hintText: 'Married',
+                            prefixIcon:
+                                Image.asset('assets/images/status_icon.png'),
+                            items: statusDropdownItems),
+                        CEditProfileFormField(
+                          textInputAction: TextInputAction.next,
+                          keyboardType: TextInputType.number,
+                          hintText: 'English,Urdu,Punjabi',
+                          prefixIcon:
+                              Image.asset('assets/images/language_icon.png'),
+                        ),
+                        CEditProfileFormField(
+                          textInputAction: TextInputAction.next,
+                          keyboardType: TextInputType.number,
+                          hintText: '+9236-2689323',
+                          prefixIcon:
+                              Image.asset('assets/images/call_icon.png'),
+                        ),
+                        CEditProfileFormField(
+                          textInputAction: TextInputAction.next,
+                          keyboardType: TextInputType.number,
+                          hintText: 'Somewhere,Punjab,Pakistan',
+                          prefixIcon:
+                              Image.asset('assets/images/location_icon.png'),
+                        ),
+                        CEditProfileFormField(
+                          textInputAction: TextInputAction.next,
+                          keyboardType: TextInputType.number,
+                          hintText: '5-Nov-1978',
+                          testControllor: dateinput,
+                          prefixIcon:
+                              Image.asset('assets/images/date_icon.png'),
+                          suffixIcon: Image.asset(
+                              'assets/images/suffix_birth_icon.png'),
+
+                          // enabled: false,
+                          onTap: () async {
+                            DateTime? pickedDate = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime(
+                                    2000), //DateTime.now() - not to allow to choose before today.
+                                lastDate: DateTime(2101));
+
+                            //lastDate: DateTime.now()- DateTime(2101));
+
+                            if (pickedDate != null) {
+                              print(
+                                  pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                              String formattedDate =
+                                  DateFormat('yyyy-MM-dd').format(pickedDate);
+                              print(
+                                  formattedDate); //formatted date output using intl package =>  2021-03-16
+                              //you can implement different kind of Date Format here according to your requirement
+
+                              setState(() {
+                                dateinput.text =
+                                    formattedDate; //set output date to TextField value.
+                              });
+                            } else {
+                              print("Date is not selected");
+                            }
+                          },
+                        ),
+                        CEditProfileFormField(
+                          textInputAction: TextInputAction.next,
+                          keyboardType: TextInputType.number,
+                          hintText: 'abbasOfficial@gmail.com',
+                          prefixIcon:
+                              Image.asset('assets/images/email_icon.png'),
+                        ),
+                        CEditProfileFormField(
+                          textInputAction: TextInputAction.next,
+                          keyboardType: TextInputType.number,
+                          hintText: 'Punjab',
+                          prefixIcon:
+                              Image.asset('assets/images/province_icon.png'),
+                        ),
+                        CEditProfileFormField(
+                          textInputAction: TextInputAction.next,
+                          keyboardType: TextInputType.number,
+                          hintText: 'Programmer',
+                          prefixIcon:
+                              Image.asset('assets/images/programmer_icon.png'),
+                        ),
+                        Consumer<MinorityProvider>(
+                          builder: (context, mp, child) {
+                            return Theme(
+                              data: ThemeData(
+                                unselectedWidgetColor: Colors.white,
+                              ),
+                              child: CheckboxListTile(
+                                value: mp.value,
+                                onChanged: (bool? checked) {
+                                  mp.checkedValue();
+                                },
+                                title: const Text(
+                                  'Minority',
+                                  style: TextStyle(color: Color(0xFF444444)),
+                                ),
+                                secondary: Image.asset(
+                                    'assets/images/minority_icon.png'),
+                                tileColor: Colors.transparent,
+                                shape: kOutlineInputBorder,
+                                activeColor: Colors.white,
+                                checkColor:
+                                    Theme.of(context).colorScheme.primary,
+                              ),
+                            );
+                          },
+                        ),
+                        Consumer<DisabilityProvider>(
+                          builder: (context, dp, child) {
+                            return Theme(
+                              data: ThemeData(
+                                unselectedWidgetColor: Colors.white,
+                              ),
+                              child: CheckboxListTile(
+                                value: dp.value,
+                                onChanged: (bool? checked) {
+                                  dp.checkedValue();
+                                },
+                                title: const Text(
+                                  'Disability',
+                                  style: TextStyle(color: Color(0xFF444444)),
+                                ),
+                                secondary: Image.asset(
+                                    'assets/images/disability_icon.png'),
+                                tileColor: Colors.transparent,
+                                shape: kOutlineInputBorder,
+                                activeColor: Colors.white,
+                                checkColor:
+                                    Theme.of(context).colorScheme.primary,
+                              ),
+                            );
+                          },
+                        ),
+                        Consumer<CountryProvider>(
+                          builder: (context, cp, child) =>
+                              CProfileDropdownButtonFormField(
+                            // value: _currentOccupationSelectedValue,
+                            isExpanded: true,
+                            onChanged: (value) {
+                              print(value.name);
+                            },
                             hintText: 'Other Nationality',
                             prefixIcon: Image.asset(
                                 'assets/images/nationality_icon.png'),
 
-                            icon:
-                                Image.asset('assets/images/dropdown_icon.png'),
-                            //items: dropdownCountry
-                            items: [],
+                            items: cp.country,
+                            icon: Icon(
+                              Icons.arrow_drop_down,
+                              color: Colors.white,
+                            ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
 
                     //floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

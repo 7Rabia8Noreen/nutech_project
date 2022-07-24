@@ -2,14 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:nutech/models/occupation.dart';
 import 'package:nutech/pages/qualification.dart';
+import 'package:nutech/providers/country_provider.dart';
+import 'package:nutech/providers/date_provider.dart';
+import 'package:nutech/providers/disability_provider.dart';
+import 'package:nutech/providers/minority_provider.dart';
+import 'package:nutech/providers/occupation_provider.dart';
+import 'package:nutech/providers/province_provider.dart';
+import 'package:nutech/utils/constants.dart';
 import 'package:nutech/utils/routes.dart';
+import 'package:provider/provider.dart';
 
 import '../components/c_dropdown_b.dart';
 import '../components/c_elevated_button.dart';
 import '../components/c_text_form_field.dart';
-import '../widgets/province.dart';
-import '../widgets/country.dart';
+import '../models/country_class.dart';
+import '../models/province_class.dart';
+import '../networks/api_service.dart';
+import '../providers/city_provider.dart';
 
 class PersonalInformation extends StatefulWidget {
   PersonalInformation({Key? key}) : super(key: key);
@@ -46,13 +57,9 @@ class _PersonalInformationState extends State<PersonalInformation> {
   String? _currentOccupationSelectedValue = "Other";
 
   TextEditingController dateinput = TextEditingController();
-  //text editing controller for text field
 
-  @override
-  void initState() {
-    dateinput.text = ""; //set the initial value of text field
-    super.initState();
-  }
+  //text editing controller for text field
+  bool? value;
 
   List<DropdownMenuItem<String>> get genderDropdownItems {
     return [
@@ -118,42 +125,15 @@ class _PersonalInformationState extends State<PersonalInformation> {
     ];
   }
 
-  List<DropdownMenuItem<Province>> get dropdownProvince {
-    return [
-      DropdownMenuItem<Province>(
-        child: const Text('Punjab'),
-        value: Province(id: 1, name: 'Punjab'),
-      ),
-      DropdownMenuItem<Province>(
-        child: const Text('Sindh'),
-        value: Province(id: 2, name: 'Sindh'),
-      ),
-      DropdownMenuItem<Province>(
-        child: const Text('KPK'),
-        value: Province(id: 3, name: 'KPK'),
-      )
-    ];
-  }
-
-  List<DropdownMenuItem<Country>> get dropdownCountry {
-    return [
-      DropdownMenuItem<Country>(
-        child: const Text('Pakistan'),
-        value: Country(id: 1, name: 'Pakistan'),
-      ),
-      DropdownMenuItem<Country>(
-        child: const Text('Canada'),
-        value: Country(id: 2, name: 'Canada'),
-      ),
-      DropdownMenuItem<Country>(
-        child: const Text('India'),
-        value: Country(id: 3, name: 'India'),
-      )
-    ];
-  }
+  // int provinceid = 1;
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<CountryProvider>(context, listen: false).getCountriesFromAPI();
+    Provider.of<OccupationProvider>(context, listen: false)
+        .getOccupationsFromAPI();
+    Provider.of<ProvinceProvider>(context, listen: false).getProvincesFromAPI();
+
     return Scaffold(
       body: Stack(
         children: [
@@ -168,7 +148,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
             child: SvgPicture.asset('assets/svg/left_personal_info.svg'),
           ),*/
           Padding(
-            padding: EdgeInsets.only(left: 20.w),
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: SafeArea(
               child: SingleChildScrollView(
                 child: Column(
@@ -231,57 +211,39 @@ class _PersonalInformationState extends State<PersonalInformation> {
                     SizedBox(
                       height: 20.h,
                     ),
-                    CDropdownButtonFormField(
-                        //value: _currentOccupationSelectedValue,
-                        isExpanded: true,
-                        onChanged: (value) {
-                          print(value);
-                        },
-                        hintText: 'Select Fathers occupation',
-                        prefixIcon:
-                            Image.asset('assets/images/occupation_icon.png'),
-                        items: occupationDropdownItems),
+                    Consumer<OccupationProvider>(
+                      builder: (context, op, child) => CDropdownButtonFormField(
+                          //value: _currentOccupationSelectedValue,
+                          isExpanded: true,
+                          onChanged: (value) {
+                            print(value.name);
+                          },
+                          hintText: 'Select Fathers occupation',
+                          prefixIcon:
+                              Image.asset('assets/images/occupation_icon.png'),
+                          items: op.occupations),
+                    ),
                     SizedBox(
                       height: 20.h,
                     ),
-                    TextFormField(
-                      controller: dateinput,
-                      textInputAction: TextInputAction.next,
-                      keyboardType: TextInputType.text,
-                      decoration: getInputDecoration(
-                        hintText: 'Date of Birth',
-                        prefixIcon:
-                            Image.asset('assets/images/prefix_birth_icon.png'),
-                        suffixIcon:
-                            Image.asset('assets/images/suffix_birth_icon.png'),
-                      ),
-                      // enabled: false,
-                      onTap: () async {
-                        DateTime? pickedDate = await showDatePicker(
-                            context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(
-                                2000), //DateTime.now() - not to allow to choose before today.
-                            lastDate: DateTime(2101));
-
-                        //lastDate: DateTime.now()- DateTime(2101));
-
-                        if (pickedDate != null) {
-                          print(
-                              pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
-                          String formattedDate =
-                              DateFormat('yyyy-MM-dd').format(pickedDate);
-                          print(
-                              formattedDate); //formatted date output using intl package =>  2021-03-16
-                          //you can implement different kind of Date Format here according to your requirement
-
-                          setState(() {
-                            dateinput.text =
-                                formattedDate; //set output date to TextField value.
-                          });
-                        } else {
-                          print("Date is not selected");
-                        }
+                    Consumer<DateProvider>(
+                      builder: (context, dp, child) {
+                        return TextFormField(
+                          controller: dateinput,
+                          textInputAction: TextInputAction.next,
+                          keyboardType: TextInputType.text,
+                          decoration: getInputDecoration(
+                            hintText: 'Date of Birth',
+                            prefixIcon: Image.asset(
+                                'assets/images/prefix_birth_icon.png'),
+                            suffixIcon: Image.asset(
+                                'assets/images/suffix_birth_icon.png'),
+                          ),
+                          // enabled: false,
+                          onTap: () {
+                            dp.pickDateDialog(context, dateinput);
+                          },
+                        );
                       },
                     ),
                     SizedBox(
@@ -341,58 +303,94 @@ class _PersonalInformationState extends State<PersonalInformation> {
                     SizedBox(
                       height: 20.h,
                     ),
-                    DropdownButtonFormField<Province>(
-                        //value: _currentOccupationSelectedValue,
-                        isExpanded: true,
-                        onChanged: (value) {
-                          print(value);
-                        },
-                        decoration: getInputDecoration(
+                    Consumer<ProvinceProvider>(
+                      builder: (context, pp, child) => CDropdownButtonFormField(
+                          //value: _currentOccupationSelectedValue,
+                          isExpanded: true,
+                          onChanged: (value) {
+                            print(value.name);
+                            Provider.of<CityProvider>(context, listen: false)
+                                .getCitiesFromAPI(value.id);
+                          },
                           hintText: 'Domicile Province',
                           prefixIcon: Image.asset(
                               'assets/images/prefix_domicile_icon.png'),
-                        ),
-                        items: dropdownProvince),
+                          items: pp.provinces),
+                    ),
                     SizedBox(
                       height: 20.h,
                     ),
-                    CDropdownButtonFormField(
-                        //value: _currentOccupationSelectedValue,
-                        isExpanded: true,
-                        onChanged: (value) {
-                          print(value);
-                        },
-                        hintText: 'Minority',
-                        prefixIcon: Image.asset(
-                            'assets/images/prefix_minority_icon.png'),
-                        items: minorityDropdownItems),
+                    Consumer<CityProvider>(
+                      builder: (context, cp, child) => CDropdownButtonFormField(
+                          //value: _currentOccupationSelectedValue,
+                          isExpanded: true,
+                          onChanged: (value) {
+                            print(value.name);
+                          },
+                          hintText: 'Select City',
+                          prefixIcon: Image.asset(
+                              'assets/images/prefix_domicile_icon.png'),
+                          items: cp.cities),
+                    ),
                     SizedBox(
                       height: 20.h,
                     ),
-                    CDropdownButtonFormField(
-                        //value: _currentOccupationSelectedValue,
-                        isExpanded: true,
-                        onChanged: (value) {
-                          print(value);
-                        },
-                        hintText: 'Disability',
-                        prefixIcon: Image.asset('assets/images/disability.png'),
-                        items: disabilityDropdownItems),
+                    Consumer<DisabilityProvider>(
+                      builder: (context, dp, child) {
+                        return CheckboxListTile(
+                          value: dp.value,
+                          onChanged: (bool? checked) {
+                            dp.checkedValue();
+                          },
+                          title: const Text(
+                            'Disability',
+                            style: TextStyle(color: Color(0xFF444444)),
+                          ),
+                          secondary: const Icon(Icons.wheelchair_pickup),
+                          tileColor: Theme.of(context).colorScheme.background,
+                          shape: kOutlineInputBorder,
+                          activeColor: Theme.of(context).colorScheme.primary,
+                        );
+                      },
+                    ),
                     SizedBox(
                       height: 20.h,
                     ),
-                    DropdownButtonFormField<Country>(
+                    Consumer<MinorityProvider>(
+                      builder: (context, mp, child) {
+                        return CheckboxListTile(
+                          value: mp.value,
+                          onChanged: (bool? checked) {
+                            mp.checkedValue();
+                          },
+                          title: const Text(
+                            'Minority',
+                            style: TextStyle(color: Color(0xFF444444)),
+                          ),
+                          secondary: const Icon(Icons.wheelchair_pickup),
+                          tileColor: Theme.of(context).colorScheme.background,
+                          shape: kOutlineInputBorder,
+                          activeColor: Theme.of(context).colorScheme.primary,
+                        );
+                      },
+                    ),
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    Consumer<CountryProvider>(
+                      builder: (context, cp, child) => CDropdownButtonFormField(
                         //value: _currentOccupationSelectedValue,
                         isExpanded: true,
                         onChanged: (value) {
-                          print(value);
+                          print(value.name);
                         },
-                        decoration: getInputDecoration(
-                          prefixIcon:
-                              Image.asset('assets/images/nationality.png'),
-                          hintText: 'Other Nationality',
-                        ),
-                        items: dropdownCountry),
+                        prefixIcon:
+                            Image.asset('assets/images/nationality.png'),
+                        hintText: 'Other Nationality',
+
+                        items: cp.country,
+                      ),
+                    ),
                     SizedBox(
                       height: 85.h,
                     ),

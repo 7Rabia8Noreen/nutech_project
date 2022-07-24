@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:nutech/utils/course.dart';
+import 'package:nutech/widgets/course_card.dart';
+import 'package:nutech/utils/program.dart';
+import 'package:nutech/widgets/program_card.dart';
 
-import '../components/c_text_form_field.dart';
+import '../utils/programs_list.dart';
+import '../widgets/app_drawer.dart';
+import '../utils/course_list.dart';
 
 class OfferedCourses extends StatefulWidget {
   OfferedCourses({Key? key}) : super(key: key);
@@ -12,437 +18,200 @@ class OfferedCourses extends StatefulWidget {
 }
 
 class _OfferedCoursesState extends State<OfferedCourses> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
+      key: _scaffoldKey,
+      drawer: const AppDrawer(),
+      body: Column(
+        mainAxisSize: MainAxisSize.max,
         children: [
-          Positioned(
-            top: 0,
-            // right: 0,
-            child: SvgPicture.asset('assets/svg/offered_courses_top.svg'),
-          ),
-          SafeArea(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Column(
-                  children: [
-                    RPadding(
-                      padding: REdgeInsets.only(top: 50.h, left: 10.w),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SvgPicture.asset('assets/svg/menu_icon.svg'),
-                          Text(
-                            'Hi FAIZAN',
-                            style: Theme.of(context).textTheme.headlineLarge,
-                          ),
-                        ],
+          SizedBox(
+            width: ScreenUtil().screenWidth,
+            height: 160.h,
+            child: Stack(
+              children: [
+                Positioned(
+                  top: 0,
+                  child: SvgPicture.asset(
+                    'assets/svg/offered_courses_top.svg',
+                    width: ScreenUtil().screenWidth,
+                  ),
+                ),
+                Positioned(
+                  top: 30.h,
+                  child: SizedBox(
+                    width: ScreenUtil().screenWidth,
+                    child: Padding(
+                      padding: REdgeInsets.only(
+                        left: 10.w,
+                        right: 17.w,
                       ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          'Welcome back!',
-                          style: Theme.of(context).textTheme.headline4,
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 44.h,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          children: [
-                            Text(
-                              'Offered Courses',
-                              style: Theme.of(context).textTheme.bodyText1,
-                            ),
-                            Text(
-                              'Offered Programs',
-                              style: Theme.of(context).textTheme.headline4,
-                            )
-                          ],
-                        ),
-                        Column(
-                          // mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              '15',
-                              style: Theme.of(context).textTheme.bodyText2,
-                            ),
-                            Text(
-                              '04',
-                              style: Theme.of(context).textTheme.headline4,
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 50.h,
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        'Programs',
-                        style: Theme.of(context).textTheme.headline5,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 17.h,
-                    ),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Container(
-                            height: 250.h,
-                            width: 200.w,
-                            child: Card(
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                side: BorderSide(
-                                  color: Color(0xFFBCBCBC), width: 1.sp,
-                                  //color: Color(Colors.black), width: 1.sp,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              IconButton(
+                                onPressed: () =>
+                                    _scaffoldKey.currentState!.openDrawer(),
+                                icon: Icon(
+                                  Icons.menu,
+                                  size: 30.w,
+                                  color: Colors.white,
                                 ),
                               ),
-                              child: Stack(
+                              Column(
                                 children: [
-                                  Positioned(
-                                    top: 0,
-                                    child: Image.asset(
-                                      'assets/images/kamyab_jawan_logo.png',
-                                      fit: BoxFit.contain,
+                                  Text(
+                                    'Hi FAIZAN',
+                                    style: TextStyle(
+                                      fontSize: 24.sp,
+                                      fontWeight: FontWeight.w800,
+                                      color: Colors.white,
+                                      fontFamily: 'Red Hat Display',
                                     ),
                                   ),
-                                  Positioned(
-                                    top: 0,
-                                    child: RPadding(
-                                      padding: REdgeInsets.only(
-                                          left: 11.w, top: 9.h),
-                                      child: TextButton(
-                                        onPressed: () {},
-                                        child: Text('New'),
-                                        style: TextButton.styleFrom(
-                                          primary: Color(0xFF8B010B),
-                                          textStyle: TextStyle(
-                                            fontSize: 10.sp,
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10.r),
-                                            //side: BorderSide(color: Color(Colors.transparent))
-                                          ),
-                                          backgroundColor: Color(0xFFD9D9D9),
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 6.w, vertical: 2.h),
-                                        ),
-                                      ),
+                                  Text(
+                                    'Welcome back!',
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.white,
+                                      fontFamily: 'Red Hat Text',
                                     ),
                                   ),
-                                  Positioned(
-                                    bottom: 0,
-                                    child: TextButton(
-                                      onPressed: () {},
-                                      child: Text('KAMYAB JAWAN PROGRAM'),
-                                      style: TextButton.styleFrom(
-                                        primary: Color(0xFFFFFFFF),
-                                        textStyle: TextStyle(
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                        minimumSize: Size(192.w, 50.h),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.only(
-                                            bottomLeft: Radius.circular(12.r),
-                                            bottomRight: Radius.circular(12.r),
-                                          ),
-                                        ),
-                                        backgroundColor: Colors.black45,
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 6.w, vertical: 2.h),
-                                      ),
-                                    ),
-                                  )
                                 ],
                               ),
-                            ),
+                            ],
                           ),
-                          Container(
-                            height: 250.h,
-                            width: 200.w,
-                            child: Card(
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                side: BorderSide(
-                                  color: Color(0xFFBCBCBC), width: 1.sp,
-                                  //color: Color(Colors.black), width: 1.sp,
-                                ),
-                              ),
-                              child: Stack(
-                                children: [
-                                  Positioned(
-                                    top: 0,
-                                    child: Image.asset(
-                                      //'assets/images/kamyab_jawan_logo.png',
-                                      'assets/images/uni_logo.png',
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                  Positioned(
-                                    top: 0,
-                                    child: RPadding(
-                                      padding: REdgeInsets.only(
-                                          left: 11.w, top: 9.h),
-                                      child: TextButton(
-                                        onPressed: () {},
-                                        child: Text('New'),
-                                        style: TextButton.styleFrom(
-                                          primary: Color(0xFF8B010B),
-                                          textStyle: TextStyle(
-                                            fontSize: 10.sp,
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10.r),
-                                            //side: BorderSide(color: Color(Colors.transparent))
-                                          ),
-                                          backgroundColor: Color(0xFFD9D9D9),
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 6.w, vertical: 2.h),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    bottom: 0,
-                                    child: TextButton(
-                                      onPressed: () {},
-                                      child: Text('NUTECH'),
-                                      style: TextButton.styleFrom(
-                                        primary: Color(0xFFFFFFFF),
-                                        textStyle: TextStyle(
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                        minimumSize: Size(192.w, 50.h),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.only(
-                                            bottomLeft: Radius.circular(12.r),
-                                            bottomRight: Radius.circular(12.r),
-                                          ),
-                                        ),
-                                        backgroundColor: Colors.black45,
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 6.w, vertical: 2.h),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
+                          SizedBox(
+                            height: 0.h,
                           ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 27.h,
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        'Courses',
-                        style: Theme.of(context).textTheme.headline5,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 17.h,
-                    ),
-                    Container(
-                      height: 300.h,
-                      child: ListView.builder(
-                        itemBuilder: (context, index) {
-                          return Container(
-                            height: 120.h,
-                            width: 337.w,
-                            child: Card(
-                              elevation: 0,
-                              color: Color(0xFF3A6072),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                side: BorderSide(
-                                  color: Colors.transparent,
-                                  width: 0.sp,
-                                ),
-                              ),
-                              child: Row(
-                                children: [
-                                  Column(
-                                    children: [
-                                      Image.asset(
-                                          'assets/images/graphic_designing.png')
-                                    ],
-                                  ),
-                                  Column(
-                                    children: [
-                                      Flexible(
-                                        flex: 1,
-                                        fit: FlexFit.tight,
-                                        child: Container(
-                                          height: 111.h,
-                                          width: 222.w,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.only(
-                                              topRight: Radius.circular(10.r),
-                                              bottomRight:
-                                                  Radius.circular(10.r),
-                                            ),
+                          Padding(
+                            padding: REdgeInsets.only(
+                              left: 10.w,
+                              right: 17.w,
+                            ),
+                            child: Column(
+                              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Offered Courses',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText1!
+                                          .copyWith(
                                             color: Colors.white,
                                           ),
-                                          child: RPadding(
-                                            padding: REdgeInsets.symmetric(
-                                                horizontal: 11.w,
-                                                vertical: 15.h),
-                                            child: Column(
-                                              children: [
-                                                Text(
-                                                  'Graphics Design',
-                                                  style: TextStyle(
-                                                      fontSize: 12.sp,
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      fontFamily:
-                                                          'Red Hat Display'),
-                                                ),
-                                                SizedBox(
-                                                  height: 7.h,
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Text(
-                                                      'Charges',
-                                                      style: TextStyle(
-                                                        fontSize: 10.sp,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        fontFamily:
-                                                            'Red Hat Display',
-                                                        color: const Color(
-                                                            0xFF000000),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 92.w,
-                                                    ),
-                                                    Text(
-                                                      'Free',
-                                                      style: TextStyle(
-                                                        fontSize: 10.sp,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        fontFamily:
-                                                            'Red Hat Display',
-                                                        color: const Color(
-                                                            0xFF000000),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                SizedBox(
-                                                  height: 7.h,
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Text(
-                                                      'Duration',
-                                                      style: TextStyle(
-                                                        fontSize: 10.sp,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        fontFamily:
-                                                            'Red Hat Display',
-                                                        color: const Color(
-                                                            0xFF000000),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 92.w,
-                                                    ),
-                                                    Text(
-                                                      '6 Months',
-                                                      style: TextStyle(
-                                                        fontSize: 10.sp,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        fontFamily:
-                                                            'Red Hat Display',
-                                                        color: const Color(
-                                                            0xFF000000),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                SizedBox(
-                                                  height: 7.h,
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Text(
-                                                      'Classes',
-                                                      style: TextStyle(
-                                                        fontSize: 10.sp,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        fontFamily:
-                                                            'Red Hat Display',
-                                                        color: const Color(
-                                                            0xFF000000),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 92.w,
-                                                    ),
-                                                    Text(
-                                                      'Mon-Fri',
-                                                      style: TextStyle(
-                                                        fontSize: 10.sp,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        fontFamily:
-                                                            'Red Hat Display',
-                                                        color: const Color(
-                                                            0xFF000000),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                )
-                                              ],
-                                            ),
+
+                                      /// Theme.of(context).textTheme.bodyText1,
+                                    ),
+                                    Text(
+                                      '15',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText2!
+                                          .copyWith(
+                                            color: Colors.white,
                                           ),
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
+                                      //Theme.of(context).textTheme.bodyText2,
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Offered Programs',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline4!
+                                          .copyWith(
+                                            color: Colors.white,
+                                          ),
+                                      // Theme.of(context).textTheme.headline4,
+                                    ),
+                                    Text(
+                                      '04',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline4!
+                                          .copyWith(
+                                            color: Colors.white,
+                                          ),
+                                      //Theme.of(context).textTheme.headline4,
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
-                          );
-                        },
-                        itemCount: 5,
+                          ),
+                        ],
                       ),
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
+            ),
+          ),
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    'Programs',
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
+                ),
+                SizedBox(
+                  height: 0.h,
+                ),
+                SizedBox(
+                  height: 223.h,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: programs.length,
+                    itemBuilder: (context, index) => ProgramCard(
+                      program: programs[index],
+                    ),
+                    padding: REdgeInsets.all(0),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    'Courses',
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
+                ),
+                SizedBox(
+                  height: 10.h,
+                ),
+                SizedBox(
+                  //width: 192.w,
+                  height: 300.h,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    itemCount: courses.length,
+                    itemBuilder: (context, index) => CourseCard(
+                      course: courses[index],
+                    ),
+                    padding: REdgeInsets.all(0),
+                  ),
+                ),
+              ],
             ),
           ),
         ],

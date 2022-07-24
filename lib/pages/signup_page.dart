@@ -2,11 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nutech/components/c_text_form_field.dart';
-import 'package:nutech/pages/login_page.dart';
+import 'package:nutech/models/signup_class.dart';
+import 'package:nutech/providers/password_provider.dart';
+import 'package:nutech/providers/signup_provider.dart';
 import 'package:nutech/utils/routes.dart';
+import 'package:provider/provider.dart';
 
 import '../components/c_dropdown_b.dart';
 import '../components/c_elevated_button.dart';
+import '../networks/api_service.dart';
+import '../networks/network_client.dart';
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({Key? key}) : super(key: key);
@@ -80,9 +85,54 @@ class _SignUpPageState extends State<SignUpPage> {
   String? _currentCampusSelectedValue = "NUTECH";
   String? _currentDepartmentSelectedValue = "MCS";
 
+  //Map<String, dynamic> signUpParams = {};
+
+  final _cnicController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _shortNameController = TextEditingController();
+  final _contactNumberController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+
+  final _globalKeySignUpForm = GlobalKey<FormState>();
+  ApiService apiService = ApiService(networkClient: NetworkClient());
+
+  bool showLoader = true;
+
+  Future<void> _submitSignUpFormToAPI(BuildContext context) async {
+    bool isValide = _globalKeySignUpForm.currentState!.validate();
+    FocusScope.of(context).unfocus();
+    if (!isValide) {
+      return;
+    }
+    setState(() {
+      showLoader = true;
+    });
+    _globalKeySignUpForm.currentState!.save();
+
+    try {
+      var response = await apiService.signUpToAPI(params: {
+        'id': _cnicController.text.trim(),
+        'name': _nameController.text.trim(),
+        'short_name': _shortNameController.text.trim(),
+        'contact_no': _contactNumberController.text.trim(),
+        'password': _passwordController.text.trim(),
+        'password_confirmation': _confirmPasswordController.text.trim()
+      });
+      if (response.statusCode == 200) {
+        print('welcome');
+      } else {
+        print('Do not welcome');
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _globalKeySignUpForm,
       body: Stack(
         children: [
           Positioned(
@@ -97,7 +147,7 @@ class _SignUpPageState extends State<SignUpPage> {
           ),*/
 
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.w),
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
             //padding: EdgeInsets.only(top: 100.h),
             child: SafeArea(
               child: SingleChildScrollView(
@@ -113,6 +163,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       height: 19.h,
                     ),
                     CTextFormField(
+                      testControllor: _cnicController,
                       textInputAction: TextInputAction.next,
                       keyboardType: TextInputType.number,
                       hintText: '13302-1728416212-1',
@@ -123,6 +174,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       height: 19.h,
                     ),
                     CTextFormField(
+                      testControllor: _nameController,
                       textInputAction: TextInputAction.next,
                       keyboardType: TextInputType.name,
                       hintText: 'Full Name',
@@ -132,6 +184,17 @@ class _SignUpPageState extends State<SignUpPage> {
                       height: 19.h,
                     ),
                     CTextFormField(
+                      testControllor: _shortNameController,
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.name,
+                      hintText: 'Short Name',
+                      prefixIcon: Image.asset('assets/images/full_name.png'),
+                    ),
+                    SizedBox(
+                      height: 19.h,
+                    ),
+                    CTextFormField(
+                      testControllor: _contactNumberController,
                       textInputAction: TextInputAction.next,
                       keyboardType: TextInputType.phone,
                       hintText: 'Phone Number',
@@ -140,61 +203,61 @@ class _SignUpPageState extends State<SignUpPage> {
                     SizedBox(
                       height: 19.h,
                     ),
-                    CTextFormField(
-                      obscureText: true,
-                      textInputAction: TextInputAction.next,
-                      keyboardType: TextInputType.text,
-                      hintText: 'Password',
-                      prefixIcon:
-                          Image.asset('assets/images/password_lock.png'),
-                      suffixIcon: Image.asset('assets/images/password_eye.png'),
+                    Consumer<PasswordProvider>(
+                      builder: (context, pp, child) {
+                        return CTextFormField(
+                          testControllor: _passwordController,
+                          obscureText: pp.isObscure,
+                          textInputAction: TextInputAction.next,
+                          keyboardType: TextInputType.text,
+                          hintText: 'Password',
+                          prefixIcon:
+                              Image.asset('assets/images/password_lock.png'),
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              pp.toggleIsObscure();
+                            },
+                            icon: Icon(pp.isObscure
+                                ? Icons.visibility
+                                : Icons.visibility_off),
+                          ),
+                        );
+                      },
                     ),
                     SizedBox(
                       height: 19.h,
                     ),
-                    CTextFormField(
-                      obscureText: true,
-                      textInputAction: TextInputAction.next,
-                      keyboardType: TextInputType.text,
-                      hintText: 'Confirm Password',
-                      prefixIcon:
-                          Image.asset('assets/images/password_lock.png'),
-                      suffixIcon: Image.asset('assets/images/password_eye.png'),
+                    Consumer<PasswordProvider>(
+                      builder: (context, pp, child) {
+                        return CTextFormField(
+                          testControllor: _confirmPasswordController,
+                          obscureText: pp.isObscure,
+                          textInputAction: TextInputAction.done,
+                          keyboardType: TextInputType.text,
+                          hintText: 'Confirm Password',
+                          prefixIcon:
+                              Image.asset('assets/images/password_lock.png'),
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              pp.toggleIsObscure();
+                            },
+                            icon: Icon(pp.isObscure
+                                ? Icons.visibility
+                                : Icons.visibility_off),
+                          ),
+                        );
+                      },
                     ),
                     SizedBox(
                       height: 19.h,
                     ),
-                    CDropdownButtonFormField(
-                        // value: _currentOccupationSelectedValue,
-                        isExpanded: true,
-                        onChanged: (value) {
-                          print(value);
-                        },
-                        hintText: 'Please select campus',
-                        prefixIcon: Image.asset('assets/images/campus.png'),
-                        items: campusDropdownItems),
-                    SizedBox(
-                      height: 19.h,
-                    ),
-                    CDropdownButtonFormField(
-                        // value: _currentOccupationSelectedValue,
-                        isExpanded: true,
-                        hintText: 'Please select department',
-                        prefixIcon: Image.asset('assets/images/home.png'),
-                        onChanged: (value) {
-                          print(value);
-                        },
-                        items: departmentDropdownItems),
                     SizedBox(
                       height: 19.h,
                     ),
                     SizedBox(
                       width: double.infinity,
                       child: CElevatedButton(
-                        onPressed: () {
-                          Navigator.pushReplacementNamed(
-                              context, RouteGenerator.login);
-                        },
+                        onPressed: () => _submitSignUpFormToAPI(context),
                         child: const Text('SIGN UP'),
                       ),
                     ),

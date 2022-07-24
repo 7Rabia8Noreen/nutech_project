@@ -32,12 +32,11 @@ class CProfileDropdownButtonFormField extends StatelessWidget {
     return DropdownButtonFormField<dynamic>(
       // value: _currentOccupationSelectedValue,
       isExpanded: true,
-      onChanged: (value) {
-        print(value);
-      },
+      onChanged: onChanged,
       decoration: InputDecoration(
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
+        fillColor: Colors.transparent,
         /* border: outlineInputBorder,
         focusedBorder: outlineInputBorder,
         enabledBorder: outlineInputBorder,

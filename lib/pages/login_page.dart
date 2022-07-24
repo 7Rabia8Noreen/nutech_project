@@ -3,7 +3,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nutech/pages/personal_information.dart';
 import 'package:nutech/pages/signup_page.dart';
+import 'package:nutech/providers/password_provider.dart';
 import 'package:nutech/utils/routes.dart';
+import 'package:provider/provider.dart';
 
 import '../components/c_elevated_button.dart';
 import '../components/c_text_form_field.dart';
@@ -16,7 +18,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  bool obscureText = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,24 +59,26 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(
                       height: 17.h,
                     ),
-                    CTextFormField(
-                        obscureText: obscureText,
-                        textInputAction: TextInputAction.done,
-                        //obscureText: IsObscureText,
-                        keyboardType: TextInputType.text,
-                        hintText: 'Password',
-                        prefixIcon:
-                            Image.asset('assets/images/password_lock.png'),
-                        //suffixIcon: Image.asset('assets/images/password_eye.png'),
-                        suffixIcon: IconButton(
+                    Consumer<PasswordProvider>(
+                      builder: (context, pp, child) {
+                        return CTextFormField(
+                          obscureText: pp.isObscure,
+                          textInputAction: TextInputAction.done,
+                          keyboardType: TextInputType.text,
+                          hintText: 'Password',
+                          prefixIcon:
+                              Image.asset('assets/images/password_lock.png'),
+                          suffixIcon: IconButton(
                             onPressed: () {
-                              setState(() {
-                                obscureText = !obscureText;
-                              });
+                              pp.toggleIsObscure();
                             },
-                            icon: Icon(obscureText
+                            icon: Icon(pp.isObscure
                                 ? Icons.visibility
-                                : Icons.visibility_off))),
+                                : Icons.visibility_off),
+                          ),
+                        );
+                      },
+                    ),
                     SizedBox(
                       height: 15.h,
                     ),

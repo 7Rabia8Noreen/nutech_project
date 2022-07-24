@@ -45,14 +45,29 @@ class _NotificationsState extends State<Notifications> {
                         },
                         icon: const Icon(
                           Icons.arrow_back,
+                          color: Color(0xFF8B010B),
                         ),
                         color: Colors.black,
                       ),
-                      Text('Qualification',
-                          style: Theme.of(context).textTheme.headline1),
+                      Padding(
+                        padding: REdgeInsets.only(left: 50.w),
+                        child: Text('Qualification',
+                            style: Theme.of(context).textTheme.headline1),
+                      ),
                     ],
-                  )
+                  ),
                 ],
+              ),
+            ),
+          ),
+          Center(
+            child: Text(
+              'No new notifications.',
+              style: TextStyle(
+                fontSize: 20.sp,
+                fontWeight: FontWeight.w300,
+                color: Color(0xFF000000),
+                fontFamily: 'Red Hat Text',
               ),
             ),
           ),

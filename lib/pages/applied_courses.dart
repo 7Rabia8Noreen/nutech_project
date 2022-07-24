@@ -4,6 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nutech/pages/personal_information.dart';
 import 'package:nutech/pages/qualification.dart';
 import 'package:nutech/utils/routes.dart';
+import 'package:nutech/utils/course_list.dart';
+
+import '../widgets/course_card.dart';
 
 class AppliedCourses extends StatefulWidget {
   AppliedCourses({Key? key}) : super(key: key);
@@ -14,20 +17,6 @@ class AppliedCourses extends StatefulWidget {
 
 class _AppliedCoursesState extends State<AppliedCourses> {
   @override
-  void _startAddQualification(BuildContext ctx) {
-    Qualification();
-    /*showModalBottomSheet(
-      context: ctx,
-      builder: (_) {
-        return GestureDetector(
-          onTap: () {},
-          child: Qualification(),
-          behavior: HitTestBehavior.opaque,
-        );
-      },
-    );*/
-  }
-
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
@@ -35,397 +24,48 @@ class _AppliedCoursesState extends State<AppliedCourses> {
           Positioned(
             //top: 0,
             bottom: 0,
-            right: 0,
+            //right: 0,
             child: SvgPicture.asset(
               'assets/svg/qualification_bottom.svg',
               fit: BoxFit.cover,
             ),
           ),
-          RPadding(
-            padding: REdgeInsets.fromLTRB(20, 34, 24, 10),
-            child: SafeArea(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            Navigator.pushNamed(
-                                context, RouteGenerator.personalInformation);
-                          },
-                          icon: const Icon(
-                            Icons.arrow_back,
-                          ),
-                          color: Colors.black,
+                    IconButton(
+                        onPressed: () {
+                          Navigator.pushNamed(
+                              context, RouteGenerator.personalInformation);
+                        },
+                        icon: const Icon(
+                          Icons.arrow_back,
                         ),
-                        SizedBox(
-                          width: 70.w,
-                        ),
-                        Text('Applied Courses',
-                            style: Theme.of(context).textTheme.headline5),
-                      ],
-                    ),
+                        color: Color(0xFF8B010B)),
                     SizedBox(
-                      height: 73.h,
+                      width: 60.w,
                     ),
-                    Container(
-                      height: 136.w,
-                      width: 330.w,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey, width: 1.0),
-                        color: Color(0xFF444444),
-                        // color: const Color.fromRGBO(220, 220, 220, 1),
-                        borderRadius: BorderRadius.circular(18.r),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 13, top: 12, right: 19),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Bachelors in Computer Science',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w800,
-                                fontFamily: 'Red Hat Display',
-                              ),
-                            ),
-                            Text(
-                              'International Islamic University Islamabad',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 13.sp,
-                                fontWeight: FontWeight.w500,
-                                fontFamily: 'Red Hat Display',
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10.h,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Obtained Marks',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: 'Red Hat Display',
-                                  ),
-                                ),
-                                Text(
-                                  '2440',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 13.sp,
-                                    fontWeight: FontWeight.w500,
-                                    fontFamily: 'Red Hat Display',
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 9.h,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Total Marks',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: 'Red Hat Display',
-                                  ),
-                                ),
-                                Text(
-                                  '3550',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 13.sp,
-                                    fontWeight: FontWeight.w500,
-                                    fontFamily: 'Red Hat Display',
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 7.h,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Passing Year',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: 'Red Hat Display',
-                                  ),
-                                ),
-                                Text(
-                                  '2019',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 13.sp,
-                                    fontWeight: FontWeight.w500,
-                                    fontFamily: 'Red Hat Display',
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 35.h,
-                    ),
-                    Container(
-                      height: 136.w,
-                      width: 330.w,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey, width: 1.0),
-                        color: Color(0xFF444444),
-                        // color: const Color.fromRGBO(220, 220, 220, 1),
-                        borderRadius: BorderRadius.circular(18.r),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 13, top: 12, right: 19),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Bachelors in Computer Science',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w800,
-                                fontFamily: 'Red Hat Display',
-                              ),
-                            ),
-                            Text(
-                              'International Islamic University Islamabad',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 13.sp,
-                                fontWeight: FontWeight.w500,
-                                fontFamily: 'Red Hat Display',
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10.h,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Obtained Marks',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: 'Red Hat Display',
-                                  ),
-                                ),
-                                Text(
-                                  '2440',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 13.sp,
-                                    fontWeight: FontWeight.w500,
-                                    fontFamily: 'Red Hat Display',
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 9.h,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Total Marks',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: 'Red Hat Display',
-                                  ),
-                                ),
-                                Text(
-                                  '3550',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 13.sp,
-                                    fontWeight: FontWeight.w500,
-                                    fontFamily: 'Red Hat Display',
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 7.h,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Passing Year',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: 'Red Hat Display',
-                                  ),
-                                ),
-                                Text(
-                                  '2019',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 13.sp,
-                                    fontWeight: FontWeight.w500,
-                                    fontFamily: 'Red Hat Display',
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 35.h,
-                    ),
-                    Container(
-                      height: 136.w,
-                      width: 330.w,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey, width: 1.0),
-                        color: Color(0xFF444444),
-                        // color: const Color.fromRGBO(220, 220, 220, 1),
-                        borderRadius: BorderRadius.circular(18.r),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 13, top: 12, right: 19),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Bachelors in Computer Science',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w800,
-                                fontFamily: 'Red Hat Display',
-                              ),
-                            ),
-                            Text(
-                              'International Islamic University Islamabad',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 13.sp,
-                                fontWeight: FontWeight.w500,
-                                fontFamily: 'Red Hat Display',
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10.h,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Obtained Marks',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: 'Red Hat Display',
-                                  ),
-                                ),
-                                Text(
-                                  '2440',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 13.sp,
-                                    fontWeight: FontWeight.w500,
-                                    fontFamily: 'Red Hat Display',
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 9.h,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Total Marks',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: 'Red Hat Display',
-                                  ),
-                                ),
-                                Text(
-                                  '3550',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 13.sp,
-                                    fontWeight: FontWeight.w500,
-                                    fontFamily: 'Red Hat Display',
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 7.h,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Passing Year',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: 'Red Hat Display',
-                                  ),
-                                ),
-                                Text(
-                                  '2019',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 13.sp,
-                                    fontWeight: FontWeight.w500,
-                                    fontFamily: 'Red Hat Display',
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 203.h,
-                    ),
+                    Text('Applied Courses',
+                        style: Theme.of(context).textTheme.headline5),
                   ],
                 ),
-              ),
+                Expanded(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    itemCount: courses.length,
+                    itemBuilder: (context, index) => CourseCard(
+                      course: courses[index],
+                    ),
+                    padding: REdgeInsets.all(0),
+                  ),
+                ),
+              ],
             ),
           ),
         ],

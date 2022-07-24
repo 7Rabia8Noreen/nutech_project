@@ -4,7 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nutech/pages/login_page.dart';
 import 'package:intl/intl.dart';
 import 'package:nutech/pages/show_qualification.dart';
+import 'package:nutech/providers/date_provider.dart';
 import 'package:nutech/utils/routes.dart';
+import 'package:provider/provider.dart';
 
 import '../components/c_dropdown_b.dart';
 import '../components/c_elevated_button.dart';
@@ -113,25 +115,6 @@ class _QualificationState extends State<Qualification> {
   //text editing controller for text field
 
   @override
-  void initState() {
-    dateinput.text = ""; //set the initial value of text field
-    super.initState();
-  }
-
-  void _showDatePicker() {
-    showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime.now(),
-    ).then((pickedDate) {
-      if (pickedDate != null) {
-        dateinput.text = DateFormat.yMd().format(pickedDate);
-      }
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
@@ -212,18 +195,24 @@ class _QualificationState extends State<Qualification> {
                     SizedBox(
                       height: 22.h,
                     ),
-                    CTextFormField(
-                        testControllor: dateinput,
-                        textInputAction: TextInputAction.next,
-                        keyboardType: TextInputType.text,
-                        hintText: 'Passing Year',
-                        prefixIcon:
-                            Image.asset('assets/images/prefix_birth_icon.png'),
-                        suffixIcon:
-                            Image.asset('assets/images/suffix_birth_icon.png'),
-
-                        // enabled: false,
-                        onTap: _showDatePicker),
+                    Consumer<DateProvider>(
+                      builder: (context, dp, child) {
+                        return CTextFormField(
+                          testControllor: dateinput,
+                          textInputAction: TextInputAction.next,
+                          keyboardType: TextInputType.text,
+                          hintText: 'Passing Year',
+                          prefixIcon: Image.asset(
+                              'assets/images/prefix_birth_icon.png'),
+                          suffixIcon: Image.asset(
+                              'assets/images/suffix_birth_icon.png'),
+                          // enabled: false,
+                          onTap: () {
+                            dp.pickDateDialog(context, dateinput);
+                          },
+                        );
+                      },
+                    ),
                     SizedBox(
                       height: 22.h,
                     ),

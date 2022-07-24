@@ -19,6 +19,7 @@ class CEditProfileFormField extends StatelessWidget {
   final void Function()? onEditingComplete;
   final void Function(String)? onFieldSubmitted;
   final ToolbarOptions? toolbarOptions;
+  //final Color? color;
   // String obscuringCharacter = '•';
   CEditProfileFormField(
       {this.testControllor,
@@ -37,6 +38,7 @@ class CEditProfileFormField extends StatelessWidget {
       this.onChanged,
       this.onEditingComplete,
       this.onFieldSubmitted,
+      //  this.color,
       // required this.obscuringCharacter,
       this.toolbarOptions});
 
@@ -45,10 +47,10 @@ class CEditProfileFormField extends StatelessWidget {
     return TextFormField(
       controller: testControllor,
       decoration: InputDecoration(
-        prefixIcon: prefixIcon,
-        hintText: hintText,
-        suffixIcon: suffixIcon,
-      ),
+          prefixIcon: prefixIcon,
+          hintText: hintText,
+          suffixIcon: suffixIcon,
+          fillColor: Colors.transparent),
       initialValue: initialValue,
       obscureText: obscureText,
       keyboardType: keyboardType,

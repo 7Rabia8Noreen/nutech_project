@@ -33,6 +33,29 @@ class _VerifyPasswordState extends State<VerifyPassword> {
 
   @override
   Widget build(BuildContext context) {
+    final defaultPinTheme = PinTheme(
+      width: 56,
+      height: 56,
+      textStyle: TextStyle(
+          fontSize: 20,
+          color: Color.fromRGBO(30, 60, 87, 1),
+          fontWeight: FontWeight.w600),
+      decoration: BoxDecoration(
+        border: Border.all(color: Color.fromRGBO(234, 239, 243, 1)),
+        borderRadius: BorderRadius.circular(10),
+      ),
+    );
+
+    final focusedPinTheme = defaultPinTheme.copyDecorationWith(
+      border: Border.all(color: Color.fromRGBO(114, 178, 238, 1)),
+      borderRadius: BorderRadius.circular(8),
+    );
+
+    final submittedPinTheme = defaultPinTheme.copyWith(
+      decoration: defaultPinTheme.decoration!.copyWith(
+        color: Color.fromRGBO(234, 239, 243, 1),
+      ),
+    );
     return Scaffold(
       body: Stack(
         children: [
@@ -66,13 +89,28 @@ class _VerifyPasswordState extends State<VerifyPassword> {
                           Align(
                             alignment: Alignment.center,
                             child: Text(
-                                'We sent code to 034*******1 to verify your account',
+                                'Pin Code submittied to 03********* number',
                                 style: Theme.of(context).textTheme.headline4),
                           ),
                           SizedBox(
                             height: 42.h,
                           ),
-                          Row(
+                          Center(
+                            child: Pinput(
+                              defaultPinTheme: defaultPinTheme,
+                              focusedPinTheme: defaultPinTheme,
+                              submittedPinTheme: defaultPinTheme,
+                              validator: (s) {
+                                return s == '1234' ? null : 'Pin is incorrect';
+                              },
+                              pinputAutovalidateMode:
+                                  PinputAutovalidateMode.onSubmit,
+                              showCursor: true,
+                              onCompleted: (pin) => print(pin),
+                            ),
+                          ),
+
+                          /*Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               SizedBox(
@@ -120,7 +158,7 @@ class _VerifyPasswordState extends State<VerifyPassword> {
                                 ),
                               ),
                             ],
-                          ),
+                          ),*/
                           SizedBox(
                             height: 16.h,
                           ),

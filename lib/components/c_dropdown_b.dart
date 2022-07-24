@@ -1,6 +1,6 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
-import 'package:nutech/widgets/country.dart';
+import 'package:nutech/utils/country.dart';
 
 class CDropdownButtonFormField extends StatelessWidget {
   /*final outlineInputBorder = OutlineInputBorder(
@@ -11,7 +11,7 @@ class CDropdownButtonFormField extends StatelessWidget {
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final String? hintText;
-  final List<DropdownMenuItem<String>>? items;
+  final List<DropdownMenuItem<dynamic>>? items;
   final void Function(dynamic)? onSaved;
   final void Function(dynamic)? onChanged;
   // final List<DropdownMenuItem<Country>>? itemsCountry;
@@ -33,9 +33,7 @@ class CDropdownButtonFormField extends StatelessWidget {
     return DropdownButtonFormField<dynamic>(
       // value: _currentOccupationSelectedValue,
       isExpanded: true,
-      onChanged: (value) {
-        print(value);
-      },
+      onChanged: onChanged,
       decoration: InputDecoration(
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
