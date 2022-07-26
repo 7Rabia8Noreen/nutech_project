@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nutech/pages/personal_information.dart';
 import 'package:nutech/pages/signup_page.dart';
-import 'package:nutech/pages/verify_password.dart';
+import 'package:nutech/pages/otp_page.dart';
 import 'package:nutech/utils/constants.dart';
 import 'package:nutech/utils/routes.dart';
 import 'package:provider/provider.dart';
@@ -247,8 +247,8 @@ class _AddAlumniDetailsState extends State<AddAlumniDetails> {
                       width: double.infinity,
                       child: CElevatedButton(
                         onPressed: () {
-                          Navigator.pushNamed(
-                              context, RouteGenerator.verifyPassword);
+                          // Navigator.pushNamed(
+                          //     context, RouteGenerator.verifyPassword);
                         },
                         child: const Text('SUBMIT'),
                       ),

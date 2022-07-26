@@ -22,117 +22,35 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _testControllor = TextEditingController();
-  //final String _hintText = 'Type name here';
 
-  List<DropdownMenuItem<String>> get campusDropdownItems {
-    return [
-      const DropdownMenuItem<String>(
-        child: Text('NUTECH'),
-        value: '1',
-      ),
-      const DropdownMenuItem<String>(
-        child: Text('NUML'),
-        value: '2',
-      ),
-      const DropdownMenuItem<String>(
-        child: Text('FAST'),
-        value: '3',
-      ),
-      const DropdownMenuItem<String>(
-        child: Text('ARID'),
-        value: '4',
-      ),
-    ];
-  }
-
-  List<DropdownMenuItem<String>> get departmentDropdownItems {
-    return [
-      const DropdownMenuItem<String>(
-        child: Text('CS'),
-        value: '1',
-      ),
-      const DropdownMenuItem<String>(
-        child: Text('SE'),
-        value: '2',
-      ),
-      const DropdownMenuItem<String>(
-        child: Text('MATHS'),
-        value: '3',
-      ),
-      const DropdownMenuItem<String>(
-        child: Text('ENGLISH'),
-        value: '4',
-      ),
-    ];
-  }
-
-  // Initial Selected Value
-  String dropdownvalue = 'Item 1';
-
-  // List of items in our dropdown menu
-  final _campus = [
-    "NUTECH",
-    "NUML",
-    "FAST",
-    "ARID",
-  ];
-  final _department = [
-    "MCS",
-    "BSCS",
-    "BSSE",
-    "BSAI",
-  ];
-  String? _currentCampusSelectedValue = "NUTECH";
-  String? _currentDepartmentSelectedValue = "MCS";
-
-  //Map<String, dynamic> signUpParams = {};
-
-  final _cnicController = TextEditingController();
+  final _globalKeySignupForm = GlobalKey<FormState>();
+  final _idController = TextEditingController();
   final _nameController = TextEditingController();
   final _shortNameController = TextEditingController();
-  final _contactNumberController = TextEditingController();
+  final _contactNoController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
+  final _passwordConfirmationController = TextEditingController();
 
-  final _globalKeySignUpForm = GlobalKey<FormState>();
-  ApiService apiService = ApiService(networkClient: NetworkClient());
-
-  bool showLoader = true;
-
-  Future<void> _submitSignUpFormToAPI(BuildContext context) async {
-    bool isValide = _globalKeySignUpForm.currentState!.validate();
+  void _submitSignupForm(BuildContext context) async {
+    bool isValid = _globalKeySignupForm.currentState!.validate();
     FocusScope.of(context).unfocus();
-    if (!isValide) {
+    if (!isValid) {
       return;
     }
-    setState(() {
-      showLoader = true;
-    });
-    _globalKeySignUpForm.currentState!.save();
-
-    try {
-      var response = await apiService.signUpToAPI(params: {
-        'id': _cnicController.text.trim(),
-        'name': _nameController.text.trim(),
-        'short_name': _shortNameController.text.trim(),
-        'contact_no': _contactNumberController.text.trim(),
-        'password': _passwordController.text.trim(),
-        'password_confirmation': _confirmPasswordController.text.trim()
-      });
-      if (response.statusCode == 200) {
-        print('welcome');
-      } else {
-        print('Do not welcome');
-      }
-    } catch (e) {
-      print(e);
-    }
+    _globalKeySignupForm.currentState!.save();
+    Provider.of<SignupProvider>(context, listen: false).submitSignupForm(
+        _idController,
+        _nameController,
+        _shortNameController,
+        _contactNoController,
+        _passwordController,
+        _passwordConfirmationController,
+        context);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _globalKeySignUpForm,
       body: Stack(
         children: [
           Positioned(
@@ -151,156 +69,210 @@ class _SignUpPageState extends State<SignUpPage> {
             //padding: EdgeInsets.only(top: 100.h),
             child: SafeArea(
               child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 122.h,
-                    ),
-                    Text('Sign Up',
-                        style: Theme.of(context).textTheme.headline1),
-                    SizedBox(
-                      height: 19.h,
-                    ),
-                    CTextFormField(
-                      testControllor: _cnicController,
-                      textInputAction: TextInputAction.next,
-                      keyboardType: TextInputType.number,
-                      hintText: '13302-1728416212-1',
-                      prefixIcon:
-                          Image.asset('assets/images/signup_finger_icon.png'),
-                    ),
-                    SizedBox(
-                      height: 19.h,
-                    ),
-                    CTextFormField(
-                      testControllor: _nameController,
-                      textInputAction: TextInputAction.next,
-                      keyboardType: TextInputType.name,
-                      hintText: 'Full Name',
-                      prefixIcon: Image.asset('assets/images/full_name.png'),
-                    ),
-                    SizedBox(
-                      height: 19.h,
-                    ),
-                    CTextFormField(
-                      testControllor: _shortNameController,
-                      textInputAction: TextInputAction.next,
-                      keyboardType: TextInputType.name,
-                      hintText: 'Short Name',
-                      prefixIcon: Image.asset('assets/images/full_name.png'),
-                    ),
-                    SizedBox(
-                      height: 19.h,
-                    ),
-                    CTextFormField(
-                      testControllor: _contactNumberController,
-                      textInputAction: TextInputAction.next,
-                      keyboardType: TextInputType.phone,
-                      hintText: 'Phone Number',
-                      prefixIcon: Image.asset('assets/images/phone_number.png'),
-                    ),
-                    SizedBox(
-                      height: 19.h,
-                    ),
-                    Consumer<PasswordProvider>(
-                      builder: (context, pp, child) {
-                        return CTextFormField(
-                          testControllor: _passwordController,
-                          obscureText: pp.isObscure,
-                          textInputAction: TextInputAction.next,
-                          keyboardType: TextInputType.text,
-                          hintText: 'Password',
-                          prefixIcon:
-                              Image.asset('assets/images/password_lock.png'),
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              pp.toggleIsObscure();
-                            },
-                            icon: Icon(pp.isObscure
-                                ? Icons.visibility
-                                : Icons.visibility_off),
-                          ),
-                        );
-                      },
-                    ),
-                    SizedBox(
-                      height: 19.h,
-                    ),
-                    Consumer<PasswordProvider>(
-                      builder: (context, pp, child) {
-                        return CTextFormField(
-                          testControllor: _confirmPasswordController,
-                          obscureText: pp.isObscure,
-                          textInputAction: TextInputAction.done,
-                          keyboardType: TextInputType.text,
-                          hintText: 'Confirm Password',
-                          prefixIcon:
-                              Image.asset('assets/images/password_lock.png'),
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              pp.toggleIsObscure();
-                            },
-                            icon: Icon(pp.isObscure
-                                ? Icons.visibility
-                                : Icons.visibility_off),
-                          ),
-                        );
-                      },
-                    ),
-                    SizedBox(
-                      height: 19.h,
-                    ),
-                    SizedBox(
-                      height: 19.h,
-                    ),
-                    SizedBox(
-                      width: double.infinity,
-                      child: CElevatedButton(
-                        onPressed: () => _submitSignUpFormToAPI(context),
-                        child: const Text('SIGN UP'),
+                child: Form(
+                  key: _globalKeySignupForm,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 122.h,
                       ),
-                    ),
-                    SizedBox(
-                      height: 17.h,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Wrap(
-                          children: [
-                            Text(
-                              'Already have an account?',
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w400,
-                                fontFamily: 'Red Hat Display',
-                                color: const Color(0xFF444444),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                    context, RouteGenerator.signup);
+                      Text('Sign Up',
+                          style: Theme.of(context).textTheme.headline1),
+                      SizedBox(
+                        height: 19.h,
+                      ),
+                      CTextFormField(
+                        testControllor: _idController,
+                        textInputAction: TextInputAction.next,
+                        keyboardType: TextInputType.number,
+                        hintText: '13302-1728416212-1',
+                        prefixIcon:
+                            Image.asset('assets/images/signup_finger_icon.png'),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter cnic no';
+                          } else if (!RegExp(r'^(\d{13})$').hasMatch(value)) {
+                            return 'Please enter 13 digits valid cnic no';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(
+                        height: 19.h,
+                      ),
+                      CTextFormField(
+                        testControllor: _nameController,
+                        textInputAction: TextInputAction.next,
+                        keyboardType: TextInputType.name,
+                        hintText: 'Full Name',
+                        prefixIcon: Image.asset('assets/images/full_name.png'),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter full name';
+                          } else if (!RegExp(r'^[a-zA-Z]+(?:\s[a-zA-Z]+)+$')
+                              .hasMatch(value)) {
+                            return 'Please enter valid full name';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(
+                        height: 19.h,
+                      ),
+                      CTextFormField(
+                        testControllor: _shortNameController,
+                        textInputAction: TextInputAction.next,
+                        keyboardType: TextInputType.name,
+                        hintText: 'Short Name',
+                        prefixIcon: Image.asset('assets/images/full_name.png'),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter short name';
+                          } else if (!RegExp(r'^[a-zA-Z]+$').hasMatch(value)) {
+                            return 'Please enter valid short name';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(
+                        height: 19.h,
+                      ),
+                      CTextFormField(
+                        testControllor: _contactNoController,
+                        textInputAction: TextInputAction.next,
+                        keyboardType: TextInputType.phone,
+                        hintText: 'Phone Number',
+                        prefixIcon:
+                            Image.asset('assets/images/phone_number.png'),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter mobile no';
+                          } else if (!RegExp(r'^[03][0-9]{10,}$')
+                              .hasMatch(value)) {
+                            return 'Please enter valid mobile no';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(
+                        height: 19.h,
+                      ),
+                      Consumer<PasswordProvider>(
+                        builder: (context, pp, child) {
+                          return CTextFormField(
+                            testControllor: _passwordController,
+                            obscureText: pp.isObscure,
+                            textInputAction: TextInputAction.next,
+                            keyboardType: TextInputType.text,
+                            hintText: 'Password',
+                            prefixIcon:
+                                Image.asset('assets/images/password_lock.png'),
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                pp.toggleIsObscure();
                               },
-                              child: Text(
-                                'Sign In',
+                              icon: Icon(pp.isObscure
+                                  ? Icons.visibility
+                                  : Icons.visibility_off),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter password';
+                              } else if (value.length < 7) {
+                                return 'Please enter at least 8 characters password';
+                              }
+                              return null;
+                            },
+                          );
+                        },
+                      ),
+                      SizedBox(
+                        height: 19.h,
+                      ),
+                      Consumer<PasswordProvider>(
+                        builder: (context, pp, child) {
+                          return CTextFormField(
+                            testControllor: _passwordConfirmationController,
+                            obscureText: pp.isObscure,
+                            textInputAction: TextInputAction.done,
+                            keyboardType: TextInputType.text,
+                            hintText: 'Confirm Password',
+                            prefixIcon:
+                                Image.asset('assets/images/password_lock.png'),
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                pp.toggleIsObscure();
+                              },
+                              icon: Icon(pp.isObscure
+                                  ? Icons.visibility
+                                  : Icons.visibility_off),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please re-enter password';
+                              } else if (value.length < 7) {
+                                return 'Please re-enter at least 8 characters password';
+                              }
+                              return null;
+                            },
+                          );
+                        },
+                      ),
+                      SizedBox(
+                        height: 19.h,
+                      ),
+                      SizedBox(
+                        height: 19.h,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: CElevatedButton(
+                          onPressed: () => _submitSignupForm(context),
+                          child: const Text('SIGN UP'),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 17.h,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Wrap(
+                            children: [
+                              Text(
+                                'Already have an account?',
                                 style: TextStyle(
                                   fontSize: 14.sp,
-                                  fontWeight: FontWeight.w700,
+                                  fontWeight: FontWeight.w400,
                                   fontFamily: 'Red Hat Display',
-                                  color: const Color(0xFF8B010B),
+                                  color: const Color(0xFF444444),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 25.h,
-                    ),
-                  ],
+                              InkWell(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                      context, RouteGenerator.signup);
+                                },
+                                child: Text(
+                                  'Sign In',
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w700,
+                                    fontFamily: 'Red Hat Display',
+                                    color: const Color(0xFF8B010B),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 25.h,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

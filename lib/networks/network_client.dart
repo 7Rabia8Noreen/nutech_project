@@ -4,8 +4,8 @@ import '../errors/exceptions.dart';
 
 class NetworkClient {
   Dio _dio = Dio();
-  // String baseUrl = 'http://10.5.6.55:8000/';
-  String baseUrl = 'https://hrm.talhasultan.dev/';
+  String baseUrl = 'http://10.5.6.55:8000/api';
+  //String baseUrl = 'https://hrm.talhasultan.dev/api';
 
   NetworkClient() {
     BaseOptions baseOptions = BaseOptions(
@@ -43,13 +43,34 @@ class NetworkClient {
   }
 
   // for HTTP.POST Request.
-  Future<Response> post(String url, Map<String, dynamic> params) async {
+  // Future<Response> post(String url, Map<String, dynamic> params) async {
+  //   Response response;
+  //   try {
+  //     response = await _dio.post(url,
+  //         data: params,
+  //         options: Options(
+  //           responseType: ResponseType.json,
+  //         ));
+  //   } on DioError catch (exception) {
+  //     throw RemoteException(dioError: exception);
+  //   }
+  //   return response;
+  // }
+
+  Future<Response> post(String url, Map<String, dynamic> params,
+      {String? token}) async {
     Response response;
     try {
+      Map<String, dynamic> map = {"Accept": "application/json"};
+      if (token != null) {
+        map.addAll({"Authorization": "Bearer $token"});
+      }
       response = await _dio.post(url,
           data: params,
           options: Options(
+            headers: map,
             responseType: ResponseType.json,
+            validateStatus: (_) => true,
           ));
     } on DioError catch (exception) {
       throw RemoteException(dioError: exception);

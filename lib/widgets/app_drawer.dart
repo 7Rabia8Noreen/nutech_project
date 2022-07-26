@@ -59,8 +59,14 @@ class AppDrawer extends StatelessWidget {
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.logout),
-            title: const Text('Logout'),
+            leading: const Icon(Icons.login_outlined),
+            title: InkWell(
+              onTap: () => Navigator.pushReplacementNamed(
+                context,
+                RouteGenerator.login,
+              ),
+              child: const Text('Login'),
+            ),
             onTap: () {},
           ),
           const Divider(),

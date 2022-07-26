@@ -15,13 +15,15 @@ import 'package:nutech/pages/qualification.dart';
 import 'package:nutech/pages/reset_password.dart';
 import 'package:nutech/pages/show_profile.dart';
 import 'package:nutech/pages/show_qualification.dart';
-import 'package:nutech/pages/verify_password.dart';
+import 'package:nutech/pages/otp_page.dart';
 import 'package:nutech/providers/city_provider.dart';
 import 'package:nutech/providers/country_provider.dart';
 import 'package:nutech/providers/date_provider.dart';
 import 'package:nutech/providers/disability_provider.dart';
+import 'package:nutech/providers/login_provider.dart';
 import 'package:nutech/providers/minority_provider.dart';
 import 'package:nutech/providers/occupation_provider.dart';
+import 'package:nutech/providers/otp_verification_provider.dart';
 import 'package:nutech/providers/password_provider.dart';
 import 'package:nutech/providers/province_provider.dart';
 import 'package:nutech/providers/signup_provider.dart';
@@ -69,7 +71,13 @@ class MyApp extends StatelessWidget {
             create: (_) => CityProvider(),
           ),
           ChangeNotifierProvider(
-            create: (_) => SignUpProvider(),
+            create: (_) => SignupProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => LoginProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => OTPVerificationProvider(),
           ),
         ],
         child: MaterialApp(
@@ -106,10 +114,10 @@ class MyApp extends StatelessWidget {
           //home: EmployerDetails(),
           // home: EditProfile(),
           // home: PersonalInformation(),
-          home: SignUpPage(),
+          //home: SignUpPage(),
 
-          // initialRoute: RouteGenerator.login,
-          //onGenerateRoute: RouteGenerator.generateRoute,
+          initialRoute: RouteGenerator.signup,
+          onGenerateRoute: RouteGenerator.generateRoute,
         ),
       ),
       designSize: const Size(375, 812),
