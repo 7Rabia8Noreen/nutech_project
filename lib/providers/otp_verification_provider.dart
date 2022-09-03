@@ -5,6 +5,7 @@ import 'package:logger/logger.dart';
 
 import '../models/user.dart';
 import '../networks/network_client.dart';
+import '../utils/helper.dart';
 import '../utils/routes.dart';
 
 class OTPVerificationProvider with ChangeNotifier {
@@ -32,6 +33,7 @@ class OTPVerificationProvider with ChangeNotifier {
     if (mp['success']) {
       User user = User.fromJson(mp['data']);
       Logger().i('Testttttttttttt ${user.roles}');
+      Helper.addUser(user);
       // ignore: use_build_context_synchronously
       Navigator.pushReplacementNamed(
         context,

@@ -27,16 +27,19 @@ class NetworkClient {
   }
 
   // for HTTP.GET Request.
-  Future<Response> get(String url, Map<String, dynamic> params) async {
+  Future<Response> get(String url, Map<String, dynamic>? params,
+      {String? token}) async {
     Response response;
     try {
+      Map<String, dynamic> map = {"Accept": "application/json"};
+      if (token != null) map.addAll({"Authorization": "Bearer $token"});
+
       response = await _dio.get(url,
           queryParameters: params,
           options: Options(
-            responseType: ResponseType.json,
+            headers: map,
           ));
     } on DioError catch (exception) {
-      print(exception);
       throw RemoteException(dioError: exception);
     }
     return response;

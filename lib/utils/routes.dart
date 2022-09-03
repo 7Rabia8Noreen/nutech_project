@@ -3,7 +3,7 @@ import 'package:nutech/pages/forgot_password.dart';
 import 'package:nutech/pages/offered_courses.dart';
 import 'package:nutech/pages/personal_information.dart';
 import 'package:nutech/pages/qualification.dart';
-import 'package:nutech/pages/reset_password.dart';
+import 'package:nutech/pages/change_password.dart';
 import 'package:nutech/pages/show_profile.dart';
 import 'package:nutech/pages/show_qualification.dart';
 import 'package:nutech/pages/signup_page.dart';
@@ -20,7 +20,7 @@ class RouteGenerator {
   static const String personalInformation = 'personalInformation';
   static const String qualification = 'qualification';
   static const String showQualification = 'showQualification';
-  static const String resetPassword = 'resetPassword';
+  static const String changePassword = 'changePassword';
   static const String forgetPassword = 'forgetPassword';
   static const String home = 'home';
   static const String showProfile = 'showProfile';
@@ -38,8 +38,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => Qualification());
       case showQualification:
         return MaterialPageRoute(builder: (_) => ShowQualification());
-      case resetPassword:
-        return MaterialPageRoute(builder: (_) => ResetPassword());
+      case changePassword:
+        return MaterialPageRoute(builder: (_) => ChangePassword());
       case forgetPassword:
         return MaterialPageRoute(builder: (_) => ForgotPassword());
       // case verifyPassword:

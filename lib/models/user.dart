@@ -1,9 +1,20 @@
+import 'package:hive/hive.dart';
+
+part 'user.g.dart';
+
+@HiveType(typeId: 0)
 class User {
+  @HiveField(0)
   final String message;
+  @HiveField(1)
   final int userId;
+  @HiveField(2)
   final String shortName;
+  @HiveField(3)
   final String token;
+  @HiveField(4)
   final DateTime tokenExpiresAt;
+  @HiveField(5)
   final List<dynamic> roles;
 
   User({
